@@ -1,0 +1,83 @@
+---
+title: "**Importation et Exportation des données**"
+author: "*Joël Kazadi*"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    number_sections: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Dans cette section, nous allons étudier comment importer et exporter des tableaux de données avec R. Les packages à utiliser pour ces opérations varient en fonction du format du tableau de données. Nous nous focaliserons uniquement sur des fichiers en format `.csv` et `.xlsx`.
+
+# Importation
+
+Trois cas d'importation seront passés en revue : (i) les fichiers `.csv` ; (ii) les fichiers `.xlsx` ; et (iii) les fichiers en ligne.
+
+## Format `.csv`
+
+Le package requis pour réaliser l'importation d'un tableau de données en format `.csv` est `readr`.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# install.packages("readr")
+library(readr)
+setwd("C:/Users//USER/Documents/Data_Science/RStudio/")
+data_iris <- read_csv("iris.csv", col_names = T)
+head(data_iris, n = 4L)   # ce code permet de visualiser les 4 premieres lignes du tableau de donnees
+```
+
+## Format `.xlsx`
+
+Le package requis pour réaliser l'importation d'un tableau de données en format `.xlsx` est `readxl`.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# install.packages("readxl")
+library(readxl)
+firmes <- read_excel("Data_frame.xlsx", sheet = "time_series")
+head(firmes, n = 4L)
+```
+
+## Importation en ligne
+
+L'importation d'un tableau de données disponible en ligne nécessite d'indiquer préalablement le lien web où ces données ont été publiées.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+link <- "https://archive.ics.uci.edu/ml/machine-learning-databases/00611/accelerometer.csv"
+data_online <- read.csv(file = link, header = TRUE, sep = ",", dec = ".")
+head(data_online)                   # visualisation des 6 premieres lignes
+tail(data_online)                   # visualisation des 6 dernieres lignes
+```
+
+# Exportation
+
+Reprenons l'exemple du dataframe créé dans la section précédente relative à la structure des données en R.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+data <- data.frame(Econometrie = c(18,16,17,18),
+                   Statistique = c(14,13,15,19),
+                   Niveau = c("Bon","Moyen",NA,"Excellent"),
+                   row.names = c("Kadima","Kazadi","Nsamba","Malu"))
+print(data)
+```
+
+Pour exporter l'objet `data` créé précédemment au format `.csv`, on utilise la fonction `write_csv()` du package `readxl`.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(readxl)
+write_csv(data, "data_grades.csv", col_names = T)
+```
+
+Pour les grands tableaux de données, il est généralement recommandé de sauvegarder le travail au format R. Voici le code :
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+save(data, file = "data_grades.RData")
+```
+
+Pour charger dans l'environnement la session R précédemment enregistré, on procède comme suit :
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+load("data_grades.RData")
+```
